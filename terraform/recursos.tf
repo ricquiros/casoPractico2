@@ -37,8 +37,8 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "master" {
-  name                = "master"
+resource "azurerm_linux_virtual_machine" "Master" {
+  name                = "MyMaster"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = "Standard_D2_v2"
@@ -72,8 +72,8 @@ resource "azurerm_linux_virtual_machine" "master" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "worker" {
-  name                = "worker"
+resource "azurerm_linux_virtual_machine" "Worker" {
+  name                = "MyWorker"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = "Standard_D2_v2"
@@ -106,8 +106,8 @@ resource "azurerm_linux_virtual_machine" "worker" {
     version   = "22.03.28"
   }
 }
-resource "azurerm_linux_virtual_machine" "nfs" {
-  name                = "nfs"
+resource "azurerm_linux_virtual_machine" "NFS" {
+  name                = "MyNFS"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = "Standard_F2"
