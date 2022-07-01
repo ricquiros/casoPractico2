@@ -24,13 +24,13 @@ resource "azurerm_public_ip" "PublicIp" {
   allocation_method   = "Dynamic"
 }
 
-resource "azurerm_network_interface" "nicM" {
-  name                = "vnicM"
+resource "azurerm_network_interface" "nic" {
+  name                = "vnic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "internalM"
+    name                          = "internal"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.PublicIp.id
@@ -70,7 +70,7 @@ resource "azurerm_linux_virtual_machine" "Master" {
   size                = "Standard_D2_v2"
   admin_username      = "azureuser"
   network_interface_ids = [
-    azurerm_network_interface.nicM.id,
+    azurerm_network_interface.nic.id,
   ]
 
   admin_ssh_key {
