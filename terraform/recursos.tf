@@ -24,13 +24,38 @@ resource "azurerm_public_ip" "PublicIp" {
   allocation_method   = "Dynamic"
 }
 
-resource "azurerm_network_interface" "nic" {
-  name                = "vnic"
+resource "azurerm_network_interface" "nicM" {
+  name                = "vnicM"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "internal"
+    name                          = "internalM"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.PublicIp.id
+  }
+}
+
+resource "azurerm_network_interface" "nicW" {
+  name                = "vnicW"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                          = "internalW"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.PublicIp.id
+  }
+
+}resource "azurerm_network_interface" "nicN" {
+  name                = "vnicN"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                          = "internalN"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.PublicIp.id
@@ -44,7 +69,7 @@ resource "azurerm_linux_virtual_machine" "Master" {
   size                = "Standard_D2_v2"
   admin_username      = "azureuser"
   network_interface_ids = [
-    azurerm_network_interface.nic.id,
+    azurerm_network_interface.nicM.id,
   ]
 
   admin_ssh_key {
@@ -79,7 +104,7 @@ resource "azurerm_linux_virtual_machine" "Worker" {
   size                = "Standard_D2_v2"
   admin_username      = "azureuser"
   network_interface_ids = [
-    azurerm_network_interface.nic.id,
+    azurerm_network_interface.nicW.id,
   ]
 
   admin_ssh_key {
@@ -113,7 +138,7 @@ resource "azurerm_linux_virtual_machine" "NFS" {
   size                = "Standard_F2"
   admin_username      = "azureuser"
   network_interface_ids = [
-    azurerm_network_interface.nic.id,
+    azurerm_network_interface.nicN.id,
   ]
 
   admin_ssh_key {
