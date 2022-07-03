@@ -24,6 +24,20 @@ resource "azurerm_public_ip" "PublicIp" {
   allocation_method   = "Dynamic"
 }
 
+resource "azurerm_public_ip" "PublicIpW" {
+  name                = "myPublicIPW"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_public_ip" "PublicIpN" {
+  name                = "myPublicIPN"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"
+}
+
 resource "azurerm_network_interface" "nic" {
   name                = "vnic"
   location            = azurerm_resource_group.rg.location
@@ -46,7 +60,7 @@ resource "azurerm_network_interface" "nicW" {
     name                          = "internalW"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.PublicIp.id
+    public_ip_address_id          = azurerm_public_ip.PublicIpW.id
   }
 }
 
@@ -59,7 +73,7 @@ resource "azurerm_network_interface" "nicN" {
     name                          = "internalN"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.PublicIp.id
+    public_ip_address_id          = azurerm_public_ip.PublicIpN.id
   }
 }
 
