@@ -86,6 +86,7 @@ resource "azurerm_linux_virtual_machine" "Master" {
   location            = azurerm_resource_group.rg.location
   size                = "Standard_D2_v2"
   admin_username      = "azureuser"
+  disable_password_authentication = true
   network_interface_ids = [
     azurerm_network_interface.nic.id,
   ]
@@ -106,7 +107,6 @@ resource "azurerm_linux_virtual_machine" "Master" {
     publisher = "cognosys"
   }
 
-
   source_image_reference {
     publisher = "cognosys"
     offer     = "centos-8-stream-free"
@@ -121,6 +121,7 @@ resource "azurerm_linux_virtual_machine" "Worker" {
   location            = azurerm_resource_group.rg.location
   size                = "Standard_D2_v2"
   admin_username      = "azureuser"
+  disable_password_authentication = true
   network_interface_ids = [
     azurerm_network_interface.nicW.id,
   ]
@@ -141,7 +142,6 @@ resource "azurerm_linux_virtual_machine" "Worker" {
     publisher = "cognosys"
   }
 
-
   source_image_reference {
     publisher = "cognosys"
     offer     = "centos-8-stream-free"
@@ -155,6 +155,7 @@ resource "azurerm_linux_virtual_machine" "NFS" {
   location            = azurerm_resource_group.rg.location
   size                = "Standard_F2"
   admin_username      = "azureuser"
+  disable_password_authentication = true
   network_interface_ids = [
     azurerm_network_interface.nicN.id,
   ]
@@ -174,7 +175,6 @@ resource "azurerm_linux_virtual_machine" "NFS" {
     product   = "centos-8-stream-free"
     publisher = "cognosys"
   }
-
 
   source_image_reference {
     publisher = "cognosys"
