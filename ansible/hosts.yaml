@@ -1,12 +1,11 @@
 all:
-  hosts:
-    host1.example.com:
   children:
-    webservers:
+    Master:
       hosts:
-        host2.example.com:
-        192.168.1.219:
-    databases:
+        10.0.2.10:
+    Worker:
       hosts:
-        host3.example.com:
-        host4.example.com:
+        10.0.2.11:
+    NFS:
+      hosts:
+        10.0.2.12:
