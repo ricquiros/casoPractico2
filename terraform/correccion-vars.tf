@@ -13,3 +13,9 @@ variable "network_name" {
 variable "subnet_name" {
   default = "subnet1"
 }
+
+variable "storage_account" {
+  type = string
+  description = "my storage account"
+  default = "my_storage_account"
+}
