@@ -21,12 +21,12 @@ resource "azurerm_network_interface_security_group_association" "mySecGroupAssoc
   network_security_group_id = azurerm_network_security_group.mySecGroup.id
 }
 
-resource "azurerm_network_interface_security_group_association" "mySecGroupAssociation" {
+resource "azurerm_network_interface_security_group_association" "mySecGroupAssociationW" {
   network_interface_id      = azurerm_network_interface.nicW.id
   network_security_group_id = azurerm_network_security_group.mySecGroup.id
 }
 
-resource "azurerm_network_interface_security_group_association" "mySecGroupAssociation" {
+resource "azurerm_network_interface_security_group_association" "mySecGroupAssociationN" {
   network_interface_id      = azurerm_network_interface.nicN.id
   network_security_group_id = azurerm_network_security_group.mySecGroup.id
 }
