@@ -47,7 +47,7 @@ resource "azurerm_network_interface" "nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.0.2"
+    private_ip_address            = "10.0.0.3"
     public_ip_address_id          = azurerm_public_ip.PublicIp.id
   }
 }
@@ -61,7 +61,7 @@ resource "azurerm_network_interface" "nicW" {
     name                          = "internalW"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.0.3"
+    private_ip_address            = "10.0.0.4"
     public_ip_address_id          = azurerm_public_ip.PublicIpW.id
   }
 }
@@ -75,7 +75,7 @@ resource "azurerm_network_interface" "nicN" {
     name                          = "internalN"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.0.4"
+    private_ip_address            = "10.0.0.2"
     public_ip_address_id          = azurerm_public_ip.PublicIpN.id
   }
 }
