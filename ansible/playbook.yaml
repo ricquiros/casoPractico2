@@ -1,0 +1,46 @@
+- name: 'Kubernetes, NFS, SDN, HAProxy'
+  hosts: all
+  remote_user: azureuser
+  gather_facts: true
+  become: true
+  tasks:
+    - name: 'Ejecucion de tareas comunes'
+      include_role:
+        name: common
+      tags: common
+
+    - name: 'Kubernetes Master'
+      include_role:
+        name: Master
+      when: hosts_hostname in groups['Master']
+      tags: kubernetesM
+
+    - name: 'Kubernetes Worker'
+      include_role:
+        name: Worker
+      when: hosts_hostname in groups['Worker']
+      tags: kubernetesW
+
+    - name: 'NFS'
+      include_role:
+        name: NFS
+      when: hosts_hostname in groups['NFS']
+      tags: NFS
+
+    - name: 'SDN'
+      include_role:
+        name: Master
+      when: hosts_hostname in groups['Master']
+      tags: SDN
+
+    - name: 'HAProxy'
+      include_role:
+        name: Master
+      when: hosts_hostname in groups['Master']
+      tags: HAProxy
+
+#    - name: 'App'
+#      include_role:
+#        name: App
+#      when: hosts_hostname in groups['Worker']
+#      tags: App
