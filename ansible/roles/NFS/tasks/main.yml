@@ -1,0 +1,51 @@
+---
+# tasks file for NFS
+- name: 'Install the necessary rpms'
+  dnf:
+    name: nfs-utils
+    state: latest
+  tags: NFS
+
+- name: 'Create the directories that will be shared by the server'
+  file:
+    path: "{{ nfsPath }}"
+    state: directory
+    owner: 'nobody'
+    group: 'nobody'
+    mode: '0777'
+  tags: NFS
+
+- name: 'Add the directories you want to share'
+  template:
+    src: templates/exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0644'
+  tags: NFS
+
+- name: 'Enable and Start NFS service'
+  systemd:
+    name: nfs-server
+    state: started
+    enabled: yes
+  tags: NFS
+
+- name: 'Export file system'
+  shell: exportfs -arv
+  tags: NFS
+
+- name: 'Enable NFS service on the firewall'
+  firewalld:
+    service: nfs
+    permanent: yes
+    state: enabled
+    immediate: yes
+  tags: NFS
+
+- name: 'Reload service firewalld'
+  systemd:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+  tags: NFS

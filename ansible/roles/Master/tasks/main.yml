@@ -1,0 +1,277 @@
+---
+# tasks file for Master
+#####Point1#####
+- name: 'Add the br_netfilter module'
+  modprobe:
+    name: br_netfilter
+    state: present
+  tags: kubernetesM
+
+- name: 'Enable transparent masquerading'
+  firewalld:
+    masquerade: yes
+    state: enabled
+    permanent: yes
+    immediate: yes
+  tags: kubernetesM
+
+- name: 'Reload service firewalld'
+  systemd:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+  tags: kubernetesM
+
+- name: 'Allow kubernetes to correctly handle traffic with the firewall'
+#  shell: |
+#    sudo bash -c 'cat <<EOF > /etc/sysctl.d/k8s.conf
+#    net.bridge.bridge-nf-call-ip6tables = 1
+#    net.bridge.bridge-nf-call-iptables = 1
+#    net.ipv4.ip_forward = 1
+#    EOF'
+#    sudo sysctl --system
+  lineinfile:
+      path: /etc/sysctl.d/k8s.conf
+      line: "{{item}}"
+      state: present
+      backup: yes
+      create: yes
+  with_items:
+     - net.bridge.bridge-nf-call-ip6tables = 1
+     - net.bridge.bridge-nf-call-iptables = 1
+
+- name: 'sysctl --system'
+  shell: |
+    sysctl --system
+  tags: kubernetesM
+
+#####Point2#####
+- name: 'Remove swapfile from /etc/fstab'
+    mount:
+      name: "{{ item }}"
+      fstype: swap
+      state: absent
+    with_items:
+      - swap
+  tags: kubernetesM
+
+#- name: 'Disable SWAP since kubernetes can't work with swap enabled'
+#    shell: |
+#      swapoff -a
+#      sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+#####Point3#####
+- name: 'Configure repositories CRI-O 1'
+    uri:
+      url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
+      dest: /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo
+  tags: kubernetesM
+
+- name: 'Configure repositories CRI-O 2'
+    uri:
+      url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+      dest: /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+  tags: kubernetesM
+
+- name: 'Install CRI-O'
+  dnf:
+    name: cri-o
+    state: latest
+  tags: kubernetesM
+
+#####Point4#####
+- name: 'Enable required kernel modules'
+#  shell: |
+#    sudo bash -c 'cat <<EOF > /etc/modules-load.d/crio.conf
+#    overlay
+#    br_netfilter
+#    EOF'
+  lineinfile:
+      path: /etc/modules-load.d/crio.conf
+      line: "{{item}}"
+      state: present
+      backup: yes
+      create: yes
+  with_items:
+    - overlay
+    - br_netfilter
+  tags: kubernetesM
+
+#####Point5#####
+- name: 'Enable and Start CRI-O service'
+  systemd:
+    name: crio
+    state: started
+    enabled: yes
+  tags: kubernetesM
+
+#####Point6#####
+- name: 'Enable kubernetes repo'
+#  shell: |
+#    sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+#    [kubernetes]
+#    name=Kubernetes
+#    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-aarch64
+#    enabled=1
+#    gpgcheck=1
+#    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+#    exclude=kubelet kubeadm kubectl
+#    EOF'
+  lineinfile:
+      path: /etc/yum.repos.d/kubernetes.repo
+      line: "{{item}}"
+      state: present
+      backup: yes
+      create: yes
+  with_items:
+     - [kubernetes]
+     - name=Kubernetes
+     - baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-aarch64
+     - enabled=1
+     - gpgcheck=1
+     - gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+     - exclude=kubelet kubeadm kubectl
+  tags: kubernetesM
+
+#####Point7#####
+- name: 'Install kubeadm, kubectl and kubelet'
+    dnf:
+      name: '{{ item }}'
+      state: present
+      disable_excludes: kubernetes
+    with_items:
+      - kubeadm
+      - kubectl
+      - kubelet
+  tags: kubernetesM
+
+#####Point8#####
+- name: 'Enable and Start kubelet service'
+    service:
+      name: kubelet
+      state: started
+      enabled: yes
+  tags: kubernetesM
+
+#####Only for Master#####
+#####Point9#####
+- name: 'Allow necessary traffic'
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+    loop:
+      - 6443/tcp
+      - 2379-2380/tcp
+      - 10250/tcp
+      - 10251/tcp
+      - 10252/tcp
+      - 10255/tcp
+  tags: kubernetesM
+
+- name: 'Reload service firewalld'
+  systemd:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+  tags: kubernetesM
+
+#####Point10#####
+- name: 'Allow Worker connections'
+  firewalld:
+    rich_rule: rule family=ipv4 source address=10.0.0.4/32 port port=6443 protocol=tcp accept
+    permanent: yes
+    state: enabled
+    immediate: yes
+  tags: kubernetesM
+
+- name: 'Reload service firewalld'
+  systemd:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+  tags: kubernetesM
+
+#####Point11#####
+- name: 'Configure kubeadm'
+  shell: |
+    kubeadm config images pull
+  tags: kubernetesM
+
+#####Point12#####
+#####Join#####
+- name: 'Install CNI plugin'
+  shell: |
+    kubeadm init --pod-network-cidr=192.168.0.0/16 | tail -2
+  register: kubeadmJoin
+  tags: kubernetesM
+
+- name: 'New file to save join command'
+  local_action: file path=./joinCommand state=touch
+  become: no
+  tags: kubernetesM
+
+- name: 'Save the command in the file'
+  local_action: copy content={{ kubeadmJoin.stdout }} dest=./kubeadmJoin
+  become: no
+  tags: kubernetesM
+
+#####Point13#####
+- name: 'Export kubeadmin conf'
+  shell: |
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+  tags: kubernetesM
+
+#####Point14#####
+- name: 'Create directory'
+  file:
+    path: $HOME/.kube
+    state: directory
+  tags: kubernetesM
+
+- name: 'Copy admin.conf'
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: $HOME/.kube/config
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 'u+rw,g+wx,'
+  tags: kubernetesM
+
+#####Point16#####
+#####SDN#####
+- name: 'Allow necessary traffic'
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+    loop:
+      - 8285/udp
+      - 8472/udp
+  tags: SDN
+
+- name: 'Reload service firewalld'
+  systemd:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+  tags: SDN
+
+- name: 'Apply the definition of network policies'
+  shell: |
+    kubectl apply -f https://docs.projectcalico.org/manifests/canal.yaml
+  tags: SDN
+
+- name: 'Reboot'
+  reboot:
+  tags: SDN
+
+#####Point17#####
+#####HAProxy#####
+- name: 'Install HAProxy'
+  shell: |
+    kubectl apply -f https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml
+  tags: HAProxy
