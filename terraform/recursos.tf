@@ -17,6 +17,8 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
+#IPs Publicas x3 Nodos
+
 resource "azurerm_public_ip" "PublicIp" {
   name                = "myPublicIP"
   location            = azurerm_resource_group.rg.location
@@ -38,6 +40,8 @@ resource "azurerm_public_ip" "PublicIpN" {
   allocation_method   = "Dynamic"
 }
 
+#NICs x3 Nodos
+
 resource "azurerm_network_interface" "nic" {
   name                = "vnic"
   location            = azurerm_resource_group.rg.location
@@ -47,7 +51,7 @@ resource "azurerm_network_interface" "nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.0.3"
+    private_ip_address            = "10.0.0.5"
     public_ip_address_id          = azurerm_public_ip.PublicIp.id
   }
 }
@@ -61,7 +65,7 @@ resource "azurerm_network_interface" "nicW" {
     name                          = "internalW"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.0.4"
+    private_ip_address            = "10.0.0.6"
     public_ip_address_id          = azurerm_public_ip.PublicIpW.id
   }
 }
@@ -75,10 +79,12 @@ resource "azurerm_network_interface" "nicN" {
     name                          = "internalN"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.0.2"
+    private_ip_address            = "10.0.0.4"
     public_ip_address_id          = azurerm_public_ip.PublicIpN.id
   }
 }
+
+#x3 Nodos
 
 resource "azurerm_linux_virtual_machine" "Master" {
   name                = "MyMaster"
