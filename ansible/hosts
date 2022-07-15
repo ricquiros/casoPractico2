@@ -1,8 +1,8 @@
 [Master]
-20.117.93.40 nombre_dominio=master.example.com ip_interna=10.0.0.3
+13.87.73.4 nombre_dominio=master.example.com ip_interna=10.0.0.5
 
 [Worker]
-20.108.182.108 nombre_dominio=worker.example.com ip_interna=10.0.0.4
+13.87.74.219 nombre_dominio=worker.example.com ip_interna=10.0.0.6
 
 [NFS]
-20.108.182.108 nombre_dominio=nfs.example.com ip_interna=10.0.0.2
+13.87.73.26 nombre_dominio=nfs.example.com ip_interna=10.0.0.4
