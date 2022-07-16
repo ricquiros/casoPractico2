@@ -10,11 +10,11 @@
 #  set_fact:
 #    ip_interna: "{{ ansible_facts['default_ipv4']['address'] }}"
 #  tags: common
-
+#
 #- debug:
 #    var: ip_interna
 #  tags: common
-
+#
 - name: 'Generar fichero /etc/hosts'
   template:
     src: templates/hosts.j2
@@ -45,10 +45,9 @@
   loop: "{{ servicios }}"
   tags: common
 
-- name: 'Set timezone to Europe/Madrid'
-# zone:
+- name: 'Set timezone'
   timezone:
-    name: Europe/Madrid
+    name: "{{ zone }}"
   tags: common
 
 - name: 'Deshabilitar SELinux'

@@ -7,3 +7,5 @@ rpms:
 servicios:
   - chronyd
   - firewalld
+
+zone: 'Europe/Madrid'
