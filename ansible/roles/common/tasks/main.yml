@@ -53,6 +53,5 @@
 - name: 'Deshabilitar SELinux'
   selinux:
     state: disabled
-  when: not enforcing_selinux
   notify: Reinicio
   tags: common
