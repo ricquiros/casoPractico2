@@ -9,38 +9,62 @@
         name: common
       tags: common
 
-    - name: 'Kubernetes Master'
+- name: 'Config kubernetes Master'
+  hosts: Master
+  remote_user: azureuser
+  become: true
+  tasks:
+    - name: 'kubernetes Master'
       include_role:
-        name: Master
-      when: hosts_hostname in groups['Master']
+         name: Master
       tags: kubernetesM
 
-    - name: 'Kubernetes Worker'
+- name: 'Config kubernetes Worker'
+  hosts: Worker
+  remote_user: azureuser
+  become: true
+  tasks:
+    - name: 'kubernetes Worker'
       include_role:
-        name: Worker
-      when: hosts_hostname in groups['Worker']
+         name: Worker
       tags: kubernetesW
 
+- name: 'Config NFS'
+  hosts: NFS
+  remote_user: azureuser
+  become: true
+  tasks:
     - name: 'NFS'
       include_role:
-        name: NFS
-      when: hosts_hostname in groups['NFS']
+         name: NFS
       tags: NFS
 
+- name: 'Config SDN'
+  hosts: Master
+  remote_user: azureuser
+  become: true
+  tasks:
     - name: 'SDN'
       include_role:
-        name: Master
-      when: hosts_hostname in groups['Master']
+         name: Master
       tags: SDN
 
+- name: 'Config HAProxy'
+  hosts: Master
+  remote_user: azureuser
+  become: true
+  tasks:
     - name: 'HAProxy'
       include_role:
-        name: Master
-      when: hosts_hostname in groups['Master']
+         name: Master
       tags: HAProxy
 
+#- name: 'Config App'
+#  hosts: App
+#  remote_user: azureuser
+#  become: true
+#  tasks:
 #    - name: 'App'
 #      include_role:
-#        name: App
-#      when: hosts_hostname in groups['Worker']
+#         name: Worker
 #      tags: App
