@@ -9,26 +9,6 @@
         name: common
       tags: common
 
-- name: 'Config kubernetes Master'
-  hosts: Master
-  remote_user: azureuser
-  become: true
-  tasks:
-    - name: 'kubernetes Master'
-      include_role:
-         name: Master
-      tags: kubernetesM
-
-- name: 'Config kubernetes Worker'
-  hosts: Worker
-  remote_user: azureuser
-  become: true
-  tasks:
-    - name: 'kubernetes Worker'
-      include_role:
-         name: Worker
-      tags: kubernetesW
-
 - name: 'Config NFS'
   hosts: NFS
   remote_user: azureuser
@@ -38,6 +18,16 @@
       include_role:
          name: NFS
       tags: NFS
+
+- name: 'Config kubernetes Master'
+  hosts: Master
+  remote_user: azureuser
+  become: true
+  tasks:
+    - name: 'kubernetes Master'
+      include_role:
+         name: Master
+      tags: kubernetesM
 
 - name: 'Config SDN'
   hosts: Master
@@ -59,12 +49,22 @@
          name: Master
       tags: HAProxy
 
-#- name: 'Config App'
-#  hosts: App
-#  remote_user: azureuser
-#  become: true
-#  tasks:
-#    - name: 'App'
-#      include_role:
-#         name: Worker
-#      tags: App
+- name: 'Config kubernetes Worker'
+  hosts: Worker
+  remote_user: azureuser
+  become: true
+  tasks:
+    - name: 'kubernetes Worker'
+      include_role:
+         name: Worker
+      tags: kubernetesW
+
+- name: 'Config App'
+  hosts: Master
+  remote_user: azureuser
+  become: true
+  tasks:
+    - name: 'App'
+      include_role:
+         name: App
+      tags: App

@@ -45,7 +45,7 @@
   loop: "{{ servicios }}"
   tags: common
 
-- name: 'Set timezone'
+- name: 'Establecer timezone'
   timezone:
     name: "{{ zone }}"
   tags: common

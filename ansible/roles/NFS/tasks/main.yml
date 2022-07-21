@@ -10,8 +10,8 @@
   file:
     path: "{{ nfsPath }}"
     state: directory
-    owner: 'nobody'
-    group: 'nobody'
+#    owner: 'nobody'
+#    group: 'nobody'
     mode: '0777'
   tags: NFS
 
@@ -19,9 +19,9 @@
   template:
     src: templates/exports.j2
     dest: /etc/exports
-    owner: root
-    group: root
-    mode: '0644'
+#    owner: azureuser
+#    group: azureuser
+#    mode: '0644'
   tags: NFS
 
 - name: 'Enable and Start NFS service'
