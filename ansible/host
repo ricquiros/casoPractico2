@@ -6,3 +6,6 @@
 
 [NFS]
 20.117.133.75 nombre_dominio=nfs.example.com ip_interna=10.0.0.4
+
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'

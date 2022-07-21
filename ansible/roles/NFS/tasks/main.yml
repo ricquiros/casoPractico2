@@ -10,8 +10,8 @@
   file:
     path: "{{ nfsPath }}"
     state: directory
-#    owner: 'nobody'
-#    group: 'nobody'
+    owner: 'nobody'
+    group: 'nobody'
     mode: '0777'
   tags: NFS
 

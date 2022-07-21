@@ -29,26 +29,6 @@
          name: Master
       tags: kubernetesM
 
-- name: 'Config SDN'
-  hosts: Master
-  remote_user: azureuser
-  become: true
-  tasks:
-    - name: 'SDN'
-      include_role:
-         name: Master
-      tags: SDN
-
-- name: 'Config HAProxy'
-  hosts: Master
-  remote_user: azureuser
-  become: true
-  tasks:
-    - name: 'HAProxy'
-      include_role:
-         name: Master
-      tags: HAProxy
-
 - name: 'Config kubernetes Worker'
   hosts: Worker
   remote_user: azureuser

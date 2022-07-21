@@ -35,9 +35,10 @@
      - net.ipv4.ip_forward = 1
   tags: kubernetesW
 
-- sysctl:
-    reload: yes
-    tags: kubernetesW
+- name: 'sysctl --system'
+  shell: |
+    sysctl --system
+  tags: kubernetesW
 
 #####Point2#####
 - name: 'Disable SWAP'
