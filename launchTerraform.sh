@@ -1,6 +1,6 @@
 echo 'Lanzamos el despliegue con terraform:'
 
-cd Terraform;
+cd terraform;
 terraform init;
 terraform apply --auto-approve;
 cd ..;
