@@ -243,3 +243,31 @@
   shell: |
     kubectl apply -f https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml
   tags: kubernetesM
+
+#####Mount NFS#####
+- name: 'install nfs-utils'
+  dnf:
+    name: nfs-utils
+    state: latest
+  tags: kubernetesM
+
+- name: 'Create the directory that we will mount if it does not exist'
+  file:
+    path: /mnt/unir
+    state: directory
+    owner: 'nobody'
+    group: 'nobody'
+    mode: '0777'
+  tags: kubernetesM
+
+- name: 'Mount unir'
+  mount:
+     path: /mnt/unir
+     src: '10.0.0.4:/mnt/unir'
+     fstype: nfs
+     state: present
+  tags: kubernetesM
+
+- name: 'Reboot'
+  reboot:
+  tags: kubernetesM

@@ -37,10 +37,14 @@
 
 - name: 'Enable NFS service on the firewall'
   firewalld:
-    service: nfs
+    service: "{{item}}"
     permanent: yes
     state: enabled
     immediate: yes
+  with_items:
+   - nfs
+   - rpc-bind
+   - mountd
   tags: NFS
 
 - name: 'Reload service firewalld'
