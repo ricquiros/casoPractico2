@@ -14,6 +14,17 @@ resource "azurerm_network_security_group" "mySecGroup" {
     source_address_prefix = "*"
     destination_address_prefix = "*"
   }
+  security_rule {
+    access = "Allow"
+    direction = "Inbound"
+    name = "IngressController"
+    priority = 1002
+    protocol = "Tcp"
+    source_port_range = "*"
+    destination_port_range = "3000-32767"
+    source_address_prefix = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_interface_security_group_association" "mySecGroupAssociation" {
