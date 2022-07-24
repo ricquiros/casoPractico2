@@ -245,7 +245,7 @@
   tags: kubernetesM
 
 #####Mount NFS#####
-- name: 'install nfs-utils'
+- name: 'Install nfs-utils'
   dnf:
     name: nfs-utils
     state: latest

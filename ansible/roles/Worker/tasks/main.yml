@@ -155,3 +155,31 @@
 - name: 'Execute the join'
   shell: "{{kubeJoinLaunch.stdout}}"
   tags: kubernetesW
+
+#####Mount NFS#####
+- name: 'Install nfs-utils'
+  dnf:
+    name: nfs-utils
+    state: latest
+  tags: kubernetesW
+
+- name: 'Create the directory that we will mount if it does not exist'
+  file:
+    path: /mnt/unir
+    state: directory
+    owner: 'nobody'
+    group: 'nobody'
+    mode: '0777'
+  tags: kubernetesW
+
+- name: 'Mount unir'
+  mount:
+     path: /mnt/unir
+     src: '10.0.0.4:/mnt/unir'
+     fstype: nfs
+     state: present
+  tags: kubernetesW
+
+- name: 'Reboot'
+  reboot:
+  tags: kubernetesW
