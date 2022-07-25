@@ -6,15 +6,6 @@
     use: systemd
   tags: common
 
-#- name: 'Establecer IP interna'
-#  set_fact:
-#    ip_interna: "{{ ansible_facts['default_ipv4']['address'] }}"
-#  tags: common
-#
-#- debug:
-#    var: ip_interna
-#  tags: common
-#
 - name: 'Generar fichero /etc/hosts'
   template:
     src: templates/hosts.j2
